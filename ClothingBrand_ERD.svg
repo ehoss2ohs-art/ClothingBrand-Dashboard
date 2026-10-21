@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1500" height="1000" viewBox="0 0 1500 1000">
+<rect width="1500" height="1000" fill="#0b1120"/>
+<text x="750" y="55" fill="#f8fafc" font-size="30" font-family="Arial" font-weight="bold" text-anchor="middle">CLOTHING BRAND | DATABASE ERD</text>
+<text x="750" y="88" fill="#94a3b8" font-size="15" font-family="Arial" text-anchor="middle">SQL Server Database Design</text>
+
+<!-- Customers -->
+<rect x="70" y="160" width="340" height="285" rx="12" fill="#111c30" stroke="#38bdf8" stroke-width="2"/>
+<path d="M82 160 H398 Q410 160 410 172 V205 H70 V172 Q70 160 82 160" fill="#164e63"/>
+<text x="240" y="189" fill="#ffffff" font-size="22" font-family="Arial" font-weight="bold" text-anchor="middle">Customers | العملاء</text>
+<g fill="#e2e8f0" font-size="17" font-family="Arial">
+<text x="92" y="239">🔑 PK  رقم_العميل</text>
+<text x="92" y="275">اسم_العميل</text>
+<text x="92" y="311">رقم_الموبايل</text>
+<text x="92" y="347">المحافظة</text>
+<text x="92" y="383">العنوان</text>
+<text x="92" y="419">تاريخ_التسجيل</text>
+</g>
+
+<!-- Orders -->
+<rect x="570" y="160" width="360" height="320" rx="12" fill="#111c30" stroke="#a78bfa" stroke-width="2"/>
+<path d="M582 160 H918 Q930 160 930 172 V205 H570 V172 Q570 160 582 160" fill="#4c1d95"/>
+<text x="750" y="189" fill="#ffffff" font-size="22" font-family="Arial" font-weight="bold" text-anchor="middle">Orders | الطلبات</text>
+<g fill="#e2e8f0" font-size="17" font-family="Arial">
+<text x="592" y="239">🔑 PK  رقم_الطلب</text>
+<text x="592" y="275">🔗 FK  رقم_العميل</text>
+<text x="592" y="311">تاريخ_الطلب</text>
+<text x="592" y="347">طريقة_الدفع</text>
+<text x="592" y="383">الخصم</text>
+<text x="592" y="419">مصاريف_الشحن</text>
+<text x="592" y="455">إجمالي_الفاتورة | حالة_الطلب</text>
+</g>
+
+<!-- Order Details -->
+<rect x="570" y="610" width="360" height="250" rx="12" fill="#111c30" stroke="#f59e0b" stroke-width="2"/>
+<path d="M582 610 H918 Q930 610 930 622 V655 H570 V622 Q570 610 582 610" fill="#78350f"/>
+<text x="750" y="639" fill="#ffffff" font-size="20" font-family="Arial" font-weight="bold" text-anchor="middle">Order Details | تفاصيل الطلبات</text>
+<g fill="#e2e8f0" font-size="17" font-family="Arial">
+<text x="592" y="690">🔗 FK  رقم_الطلب</text>
+<text x="592" y="730">🔗 FK  كود_الصنف</text>
+<text x="592" y="770">الكمية</text>
+<text x="592" y="810">سعر_البيع_وقت_الطلب</text>
+</g>
+
+<!-- Products -->
+<rect x="1090" y="530" width="340" height="330" rx="12" fill="#111c30" stroke="#34d399" stroke-width="2"/>
+<path d="M1102 530 H1418 Q1430 530 1430 542 V575 H1090 V542 Q1090 530 1102 530" fill="#065f46"/>
+<text x="1260" y="559" fill="#ffffff" font-size="22" font-family="Arial" font-weight="bold" text-anchor="middle">Products | المنتجات</text>
+<g fill="#e2e8f0" font-size="16" font-family="Arial">
+<text x="1110" y="609">🔑 PK  كود_الصنف</text>
+<text x="1110" y="643">رقم_المنتج</text>
+<text x="1110" y="677">اسم_المنتج</text>
+<text x="1110" y="711">التصنيف | المقاس | اللون</text>
+<text x="1110" y="745">سعر_التكلفة</text>
+<text x="1110" y="779">سعر_البيع</text>
+<text x="1110" y="813">الكمية_بالمخزن</text>
+<text x="1110" y="843">حد_إعادة_الطلب</text>
+</g>
+
+<!-- Relationship connectors -->
+<path d="M410 300 H490 V300 H570" fill="none" stroke="#38bdf8" stroke-width="3"/>
+<text x="490" y="285" fill="#7dd3fc" font-size="15" font-family="Arial" text-anchor="middle">1 : N</text>
+
+<path d="M750 480 V610" fill="none" stroke="#a78bfa" stroke-width="3"/>
+<text x="770" y="550" fill="#c4b5fd" font-size="15" font-family="Arial">1 : N</text>
+
+<path d="M930 735 H1010 V695 H1090" fill="none" stroke="#34d399" stroke-width="3"/>
+<text x="1010" y="720" fill="#6ee7b7" font-size="15" font-family="Arial" text-anchor="middle">N : 1</text>
+
+<text x="750" y="930" fill="#94a3b8" font-size="15" font-family="Arial" text-anchor="middle">PK = Primary Key  |  FK = Foreign Key  |  1:N = One-to-Many</text>
+<text x="750" y="960" fill="#64748b" font-size="13" font-family="Arial" text-anchor="middle">ClothingBrand Database • ERD Conceptual Visualization</text>
+</svg>

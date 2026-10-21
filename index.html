@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ClothingBrand | Analytics Dashboard</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #0b1120;
+            --panel: #111c30;
+            --panel-light: #17243a;
+            --border: #263449;
+            --text: #f1f5f9;
+            --muted: #94a3b8;
+            --blue: #38bdf8;
+            --green: #34d399;
+            --purple: #a78bfa;
+            --orange: #fb923c;
+            --red: #f87171;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: Arial, sans-serif;
+            min-height: 100vh;
+        }
+
+        .layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+
+        .sidebar {
+            width: 235px;
+            background: #0e1728;
+            border-right: 1px solid var(--border);
+            padding: 28px 18px;
+            flex-shrink: 0;
+        }
+
+        .brand {
+            font-size: 21px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .brand span {
+            color: var(--blue);
+        }
+
+        .sidebar-subtitle {
+            font-size: 12px;
+            color: var(--muted);
+            margin-bottom: 40px;
+        }
+
+        .nav-title {
+            color: #64748b;
+            font-size: 11px;
+            letter-spacing: 1.5px;
+            margin: 25px 10px 12px;
+        }
+
+        .nav-item {
+            padding: 13px 12px;
+            border-radius: 9px;
+            color: var(--muted);
+            font-size: 14px;
+            margin-bottom: 7px;
+        }
+
+        .nav-item.active {
+            background: #123047;
+            color: var(--blue);
+            border: 1px solid #164e63;
+        }
+
+        .sidebar-footer {
+            margin-top: 55px;
+            padding: 14px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: var(--muted);
+            font-size: 12px;
+            line-height: 1.8;
+        }
+
+        /* Main */
+
+        .main {
+            flex: 1;
+            min-width: 0;
+            padding: 30px;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-bottom: 30px;
+        }
+
+        .topbar h1 {
+            font-size: 28px;
+            margin-bottom: 9px;
+        }
+
+        .topbar p {
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        .status {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 14px;
+            background: #052e2b;
+            border: 1px solid #065f46;
+            color: var(--green);
+            border-radius: 10px;
+            font-size: 12px;
+        }
+
+        .status-dot {
+            width: 7px;
+            height: 7px;
+            background: var(--green);
+            border-radius: 50%;
+        }
+
+        /* KPI cards */
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 18px;
+        }
+
+        .card {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            padding: 22px;
+            border-radius: 15px;
+            min-width: 0;
+            transition: transform 0.2s, border-color 0.2s;
+        }
+
+        .card:hover {
+            transform: translateY(-3px);
+            border-color: #475569;
+        }
+
+        .card-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-label {
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        .card-icon {
+            display: grid;
+            place-items: center;
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            font-size: 19px;
+            background: var(--panel-light);
+        }
+
+        .card-value {
+            font-size: 29px;
+            font-weight: bold;
+            margin: 22px 0 10px;
+            overflow-wrap: anywhere;
+        }
+
+        .card-note {
+            color: var(--muted);
+            font-size: 12px;
+            line-height: 1.6;
+        }
+
+        .blue-text { color: var(--blue); }
+        .green-text { color: var(--green); }
+        .purple-text { color: var(--purple); }
+        .orange-text { color: var(--orange); }
+
+        /* Content panels */
+
+        .section-title {
+            margin: 30px 0 17px;
+            font-size: 18px;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 18px;
+        }
+
+        .panel {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 15px;
+            padding: 23px;
+            min-width: 0;
+        }
+
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 24px;
+        }
+
+        .panel-header h3 {
+            font-size: 16px;
+        }
+
+        .panel-header span {
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        /* Order status bars */
+
+        .bar-row {
+            margin-bottom: 24px;
+        }
+
+        .bar-label {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 10px;
+            font-size: 13px;
+        }
+
+        .bar-label span:first-child {
+            color: #cbd5e1;
+        }
+
+        .bar-label span:last-child {
+            font-weight: bold;
+        }
+
+        .track {
+            height: 9px;
+            background: #263449;
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        .fill {
+            height: 100%;
+            border-radius: 20px;
+        }
+
+        .fill-green { background: var(--green); }
+        .fill-orange { background: var(--orange); }
+        .fill-blue { background: var(--blue); }
+        .fill-purple { background: var(--purple); }
+
+        /* Inventory overview */
+
+        .inventory-number {
+            font-size: 30px;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        .inventory-description {
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.7;
+        }
+
+        .inventory-item {
+            padding: 16px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .inventory-item:last-child {
+            border-bottom: none;
+        }
+
+        .inventory-item-header {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            font-size: 13px;
+            margin-bottom: 10px;
+        }
+
+        /* Monthly report */
+
+        .table-wrapper {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 540px;
+        }
+
+        th, td {
+            text-align: left;
+            padding: 15px 12px;
+            border-bottom: 1px solid var(--border);
+            font-size: 13px;
+        }
+
+        th {
+            color: var(--muted);
+            font-weight: normal;
+        }
+
+        td {
+            color: #e2e8f0;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 5px 8px;
+            border-radius: 6px;
+            background: #123047;
+            color: var(--blue);
+            font-size: 11px;
+        }
+
+        /* Data notice */
+
+        .notice {
+            background: #201b12;
+            border: 1px solid #854d0e;
+            border-radius: 12px;
+            padding: 16px;
+            margin-top: 22px;
+            color: #fed7aa;
+            font-size: 13px;
+            line-height: 1.8;
+        }
+
+        footer {
+            margin-top: 30px;
+            border-top: 1px solid var(--border);
+            padding-top: 20px;
+            color: #64748b;
+            font-size: 12px;
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        /* Responsive */
+
+        @media (max-width: 1150px) {
+            .cards {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 760px) {
+            .layout {
+                display: block;
+            }
+
+            .sidebar {
+                width: 100%;
+                padding: 18px;
+                border-right: none;
+                border-bottom: 1px solid var(--border);
+            }
+
+            .sidebar-subtitle {
+                margin-bottom: 15px;
+            }
+
+            .nav-title, .sidebar-footer {
+                display: none;
+            }
+
+            .nav-item {
+                display: inline-block;
+                margin: 8px 5px 0 0;
+                padding: 10px;
+            }
+
+            .main {
+                padding: 20px 15px;
+            }
+
+            .topbar h1 {
+                font-size: 24px;
+            }
+        }
+
+        @media (max-width: 460px) {
+            .cards {
+                grid-template-columns: 1fr;
+            }
+
+            .card-value {
+                font-size: 27px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="layout">
+
+    <aside class="sidebar">
+        <div class="brand">Clothing<span>Brand</span></div>
+        <div class="sidebar-subtitle">Retail Analytics Platform</div>
+
+        <div class="nav-title">WORKSPACE</div>
+        <div class="nav-item active">▦ &nbsp; Overview</div>
+        <div class="nav-item">▤ &nbsp; Orders</div>
+        <div class="nav-item">▣ &nbsp; Inventory</div>
+        <div class="nav-item">♙ &nbsp; Customers</div>
+        <div class="nav-item">▧ &nbsp; Reports</div>
+
+        <div class="sidebar-footer">
+            <strong>DATABASE</strong><br>
+            ClothingBrand<br>
+            SQL Server
+        </div>
+    </aside>
+
+    <main class="main">
+
+        <header class="topbar">
+            <div>
+                <h1>Dashboard Overview</h1>
+                <p>Monitor your store's orders and inventory.</p>
+            </div>
+
+            <div class="status">
+                <span class="status-dot"></span>
+                Preview Mode
+            </div>
+        </header>
+
+        <!-- KPI Cards -->
+
+        <section class="cards">
+
+            <div class="card">
+                <div class="card-top">
+                    <span class="card-label">Total Orders</span>
+                    <span class="card-icon blue-text">▤</span>
+                </div>
+                <div class="card-value">129</div>
+                <div class="card-note">All recorded orders</div>
+            </div>
+
+            <div class="card">
+                <div class="card-top">
+                    <span class="card-label">Invoice Value</span>
+                    <span class="card-icon green-text">₤</span>
+                </div>
+                <div class="card-value">156,160</div>
+                <div class="card-note">EGP · All order statuses</div>
+            </div>
+
+            <div class="card">
+                <div class="card-top">
+                    <span class="card-label">Products</span>
+                    <span class="card-icon purple-text">▦</span>
+                </div>
+                <div class="card-value">259</div>
+                <div class="card-note">Product records</div>
+            </div>
+
+            <div class="card">
+                <div class="card-top">
+                    <span class="card-label">Stock Quantity</span>
+                    <span class="card-icon orange-text">▣</span>
+                </div>
+                <div class="card-value">2,509</div>
+                <div class="card-note">Units in inventory</div>
+            </div>
+
+        </section>
+
+        <h2 class="section-title">Store Performance</h2>
+
+        <section class="content-grid">
+
+            <!-- Order Status -->
+
+            <div class="panel">
+                <div class="panel-header">
+                    <h3>Order Status</h3>
+                    <span>129 total orders</span>
+                </div>
+
+                <div class="bar-row">
+                    <div class="bar-label">
+                        <span>Delivered</span>
+                        <span class="green-text">112 · 86.8%</span>
+                    </div>
+                    <div class="track">
+                        <div class="fill fill-green" style="width: 86.8%"></div>
+                    </div>
+                </div>
+
+                <div class="bar-row">
+                    <div class="bar-label">
+                        <span>Cancelled</span>
+                        <span class="orange-text">9 · 7.0%</span>
+                    </div>
+                    <div class="track">
+                        <div class="fill fill-orange" style="width: 7%"></div>
+                    </div>
+                </div>
+
+                <div class="bar-row">
+                    <div class="bar-label">
+                        <span>Shipping</span>
+                        <span class="blue-text">8 · 6.2%</span>
+                    </div>
+                    <div class="track">
+                        <div class="fill fill-blue" style="width: 6.2%"></div>
+                    </div>
+                </div>
+
+                <div class="inventory-item">
+                    <div class="inventory-item-header">
+                        <span>Invoice totals across all statuses</span>
+                        <strong>156,160 EGP</strong>
+                    </div>
+                    <div class="inventory-description">
+                        This value includes delivered, cancelled, and shipping orders.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Inventory -->
+
+            <div class="panel">
+                <div class="panel-header">
+                    <h3>Inventory Overview</h3>
+                    <span>Stock summary</span>
+                </div>
+
+                <div class="inventory-number purple-text">917,780 EGP</div>
+                <div class="inventory-description">
+                    Recorded cost value of the current inventory.
+                </div>
+
+                <div class="inventory-item">
+                    <div class="inventory-item-header">
+                        <span>Total products</span>
+                        <strong>259</strong>
+                    </div>
+                    <div class="track">
+                        <div class="fill fill-purple" style="width: 100%"></div>
+                    </div>
+                </div>
+
+                <div class="inventory-item">
+                    <div class="inventory-item-header">
+                        <span>Units in stock</span>
+                        <strong>2,509</strong>
+                    </div>
+                    <div class="track">
+                        <div class="fill fill-green" style="width: 75%"></div>
+                    </div>
+                </div>
+
+                <div class="inventory-item">
+                    <div class="inventory-item-header">
+                        <span>Products requiring attention</span>
+                        <strong class="orange-text">120</strong>
+                    </div>
+                    <div class="track">
+                        <div class="fill fill-orange" style="width: 46.3%"></div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Monthly Report -->
+
+        <h2 class="section-title">Monthly Orders Report</h2>
+
+        <section class="panel">
+            <div class="panel-header">
+                <h3>Monthly Performance</h3>
+                <span>July – October 2026</span>
+            </div>
+
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Month</th>
+                            <th>Total Orders</th>
+                            <th>Delivered</th>
+                            <th>Cancelled</th>
+                            <th>Invoice Value</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <tr>
+                            <td>July 2026</td>
+                            <td>20</td>
+                            <td><span class="badge">17</span></td>
+                            <td>1</td>
+                            <td>21,980 EGP</td>
+                        </tr>
+
+                        <tr>
+                            <td>August 2026</td>
+                            <td>41</td>
+                            <td><span class="badge">35</span></td>
+                            <td>4</td>
+                            <td>54,460 EGP</td>
+                        </tr>
+
+                        <tr>
+                            <td>September 2026</td>
+                            <td>44</td>
+                            <td><span class="badge">38</span></td>
+                            <td>2</td>
+                            <td>54,510 EGP</td>
+                        </tr>
+
+                        <tr>
+                            <td>October 2026</td>
+                            <td>24</td>
+                            <td><span class="badge">22</span></td>
+                            <td>2</td>
+                            <td>25,210 EGP</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <div class="notice">
+            <strong>Data limitation:</strong>
+            This dashboard currently uses summary values from the existing
+            database analysis. The order-details table is empty, so product-level
+            sales and actual profit by product cannot yet be calculated.
+            The displayed metrics are not connected to a live database.
+        </div>
+
+        <footer>
+            <span>ClothingBrand Analytics</span>
+            <span>Python Project · Dashboard Preview</span>
+        </footer>
+
+    </main>
+</div>
+
+</body>
+</html>
